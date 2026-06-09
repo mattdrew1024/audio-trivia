@@ -70,7 +70,7 @@ export default function App() {
   
   // Look for a PIN in the URL parameters (e.g., from scanning a QR code)
   const [urlPin, setUrlPin] = useState('');
-  const [joinPin, setJoinPin] = useState(''); // ADDED: State for manual PIN entry
+  const [joinPin, setJoinPin] = useState(''); // State for manual PIN entry
   
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -83,7 +83,7 @@ export default function App() {
     const pinParam = params.get('pin');
     if (pinParam) {
       setUrlPin(pinParam.toUpperCase());
-      setJoinPin(pinParam.toUpperCase()); // ADDED: Pre-fill manual input if URL param exists
+      setJoinPin(pinParam.toUpperCase()); // Pre-fill manual input if URL param exists
     }
 
     signInAnonymously(auth).catch(console.error);
@@ -211,7 +211,7 @@ export default function App() {
   // 4. PLAYER ACTIONS
   const handleJoinGame = async (e) => {
     e.preventDefault();
-    const finalPin = urlPin || joinPin; // ADDED: Use URL pin or manual pin
+    const finalPin = urlPin || joinPin; 
     if (!user || !finalPin || !joinName) return;
     await setDoc(doc(getPlayersCollection(), user.uid), {
       gameId: finalPin,
@@ -274,7 +274,8 @@ export default function App() {
 
   const renderPlayerView = () => {
     const me = players.find(p => p.id === user.uid);
-    const hasAnswered = me?.currentAnswer !== null;
+    // STRICT BOOLEAN CHECK: Forces false if 'me' is temporarily undefined during DB syncs
+    const hasAnswered = !!me?.currentAnswer; 
     const song = gameState.songs[gameState.currentSongIndex];
     const colors = ['bg-red-500', 'bg-blue-500', 'bg-amber-500', 'bg-emerald-500'];
 
